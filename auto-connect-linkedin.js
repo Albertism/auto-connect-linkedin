@@ -10,25 +10,32 @@ let filteredList = [];
 			cancelSession = true;
 			connectSessionLock = false;
 		    totalConnectionSent = 0;
+		    setTimeout(resetSession(), 3000);
 		}
 	});
 
 function sendConnection (totalConnection) {
+	if (!totalConnection) {
+		console.error('Error: Can\'t start the session! Please specify number of connections in the parameter!');
+		return;
+	}
 	console.log('Initializing Session...');
 	// Make sure to scroll to get full list
-	while (filteredList.length <= totalConnection) {
-		for (let i = 0; i < 3; i++) {
-			// scroll 3 times
-			setTimeout(scrollDownToBottom(), 2000); 
-		}
-		profileList = $('.org-people-profiles-module__profile-item');
-		console.log('Newly fetched profile: ', profileList.length);
-		filteredList = profileList;
-		filteredList = filterProspects(profileList);
-		console.log('Filtered Prospects: ', filteredList.length);
+	if (filteredList.length <= totalConnection) {
+		console.log('Not enough prospect in this page, loading more connection...');
+		// scroll to load
+		loadMoreConnection();
+		setTimeout(() => {
+			sendConnection(totalConnection);
+		}, 2000);
+		return;
 	}
 
-	console.log('Successfully filtered ' + filteredList.length + 'potential prospects. Sending invites...');
+	if (filteredList.length > totalConnection) {
+		filteredList = filteredList.slice(0, totalConnection);
+	}
+
+	console.log('Successfully filtered ' + filteredList.length + ' potential prospects. Sending invites...');
 
 	while(totalConnectionSent <= totalConnection && !cancelSession) {
 		$.each(filteredList, function(index, value) {
@@ -52,7 +59,7 @@ function sendConnection (totalConnection) {
 		});
 	}
 	console.log('Session Finished, resetting session...');
-	alert('Successfully sent invites to ' + totalConnectionSent + ' total prospects!');
+	alert('Successfully sent invites to ' + totalConnection + ' total prospects!');
 	resetSession();
 }
 
@@ -63,8 +70,14 @@ function clickConfirmation() {
 	connectSessionLock = false;
 }
 
-function scrollDownToBottom() {
-	window.scrollTo(0,document.body.scrollHeight);
+function loadMoreConnection() {
+	window.scrollTo(0, document.body.scrollHeight);
+	setTimeout(() => {
+		profileList = $('.org-people-profiles-module__profile-item');
+		filteredList = profileList;
+		filteredList = filterProspects(profileList);
+		console.log('Currently Filtered Prospects: ', filteredList.length, '/', totalConnection);
+	}, 2000);
 }
 
 function filterProspects(array) {
@@ -86,4 +99,6 @@ function resetSession() {
 	totalConnectionSent = 0;
 	profileList = [];
 	filteredList = [];
+	cancelSession = false;
+	console.log('Session is reset... Safe to relaunch a new session');
 }
