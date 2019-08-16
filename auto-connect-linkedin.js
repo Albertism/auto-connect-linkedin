@@ -19,6 +19,10 @@ function sendConnection (totalConnection) {
 		console.error('Error: Can\'t start the session! Please specify number of connections in the parameter!');
 		return;
 	}
+	if (totalConnection > 60) {
+		console.error('Error: To ensure to not raise the flag, please keep the invitation sent per session lower than 60');
+		return;
+	}
 	console.log('Initializing Session...');
 	// Make sure to scroll to get full list
 	if (filteredList.length <= totalConnection) {
