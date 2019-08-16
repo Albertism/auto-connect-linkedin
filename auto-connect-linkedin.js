@@ -1,6 +1,8 @@
 let connectSessionLock = false;
 let totalConnectionSent = 0;
 let cancelSession = false;
+let profileList = $('.org-people-profiles-module__profile-item');
+let filteredList = [];
 
 	$('body').on('keydown', function(event) {
 		if (event.keyCode === 67) { //keyboard C
@@ -12,37 +14,46 @@ let cancelSession = false;
 	});
 
 function sendConnection (totalConnection) {
-	let profileList = $('.org-people-profiles-module__profile-item');
-	let filteredList = [];
-
+	console.log('Initializing Session...');
 	// Make sure to scroll to get full list
 	while (filteredList.length <= totalConnection) {
 		for (let i = 0; i < 3; i++) {
 			// scroll 3 times
-			setTimeOut(scrollDownToBottom(), 2000); 
+			setTimeout(scrollDownToBottom(), 2000); 
 		}
 		profileList = $('.org-people-profiles-module__profile-item');
+		console.log('Newly fetched profile: ', profileList.length);
 		filteredList = profileList;
 		filteredList = filterProspects(profileList);
+		console.log('Filtered Prospects: ', filteredList.length);
 	}
+
+	console.log('Successfully filtered ' + filteredList.length + 'potential prospects. Sending invites...');
 
 	while(totalConnectionSent <= totalConnection && !cancelSession) {
 		$.each(filteredList, function(index, value) {
 			while(connectSessionLock) {
 				setTimeout(function() {
-					console.log('Connect dialog in progress, trying 1 second later..')
+					console.log('Connect dialog already in progress, trying 1 second later..')
 				}, 1000);
 			}
-			let connectionInfo = $(value).find('.artdeco-button__text')[0].innerHTML;
-
-			if (connectionInfo.indexOf('Connect') > -1) {
-			  let connectButton = $(value).find('.artdeco-button');
-			  connectButton.click();
-			  this.connectSessionLock = true;
-			  clickConfirmation();
+			let connectionInfo = $(value).find('.artdeco-button__text');
+			if (connectionInfo.length < 1) {
+				console.error('Cannot locate the connect button? ' + connectionInfo);
+			} else {
+				connectionInfo = connectionInfo[0].innerHTML;
+				if (connectionInfo.indexOf('Connect') > -1) {
+				  let connectButton = $(value).find('.artdeco-button');
+				  connectButton.click();
+				  this.connectSessionLock = true;
+				  clickConfirmation();
+			    }
 			}
 		});
 	}
+	console.log('Session Finished, resetting session...');
+	alert('Successfully sent invites to ' + totalConnectionSent + ' total prospects!');
+	resetSession();
 }
 
 function clickConfirmation() {
@@ -68,4 +79,11 @@ function filterProspects(array) {
             return connectionInfo.indexOf('Connect') > -1;
 		}
 	});
+}
+
+function resetSession() {
+	connectSessionLock = false;
+	totalConnectionSent = 0;
+	profileList = [];
+	filteredList = [];
 }
