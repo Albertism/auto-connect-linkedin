@@ -24,7 +24,7 @@ function sendConnection (totalConnection) {
 	if (filteredList.length <= totalConnection) {
 		console.log('Not enough prospect in this page, loading more connection...');
 		// scroll to load
-		loadMoreConnection();
+		loadMoreConnection(totalConnection);
 		setTimeout(() => {
 			sendConnection(totalConnection);
 		}, 2000);
@@ -70,7 +70,7 @@ function clickConfirmation() {
 	connectSessionLock = false;
 }
 
-function loadMoreConnection() {
+function loadMoreConnection(totalConnection) {
 	window.scrollTo(0, document.body.scrollHeight);
 	setTimeout(() => {
 		profileList = $('.org-people-profiles-module__profile-item');
