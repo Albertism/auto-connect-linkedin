@@ -71,12 +71,9 @@ function sendConnection (totalConnection) {
 
 function clickConfirmation() {
 	const sendNowButton = $($('.send-invite__actions').children('.artdeco-button')[1]);
-	setTimeout(() => {
-		sendNowButton.click();
-		totalConnectionSent++;
-		connectSessionLock = false;
-	}, 100);
-	
+	sendNowButton.click();
+	totalConnectionSent++;
+	connectSessionLock = false;
 }
 
 function loadMoreConnection(totalConnection) {
