@@ -18,6 +18,7 @@ function sendConnection (totalConnection) {
 	if (!totalConnection) {
 		console.error('Error: Can\'t start the session! Please specify number of connections in the parameter!');
 		return;
+		
 	}
 	if (totalConnection > 60) {
 		console.error('Error: To ensure to not raise the flag, please keep the invitation sent per session lower than 60');
@@ -36,7 +37,7 @@ function sendConnection (totalConnection) {
 	}
 
 	if (filteredList.length > totalConnection) {
-		filteredList = filteredList.slice(0, totalConnection);
+		filteredList = filteredList.slice(0, totalConnection);	
 	}
 
 	console.log('Successfully filtered ' + filteredList.length + ' potential prospects. Sending invites...');
@@ -62,6 +63,7 @@ function sendConnection (totalConnection) {
 			}
 		});
 	}
+	
 	console.log('Session Finished, resetting session...');
 	alert('Successfully sent invites to ' + totalConnection + ' total prospects!');
 	resetSession();
@@ -69,9 +71,12 @@ function sendConnection (totalConnection) {
 
 function clickConfirmation() {
 	const sendNowButton = $($('.send-invite__actions').children('.artdeco-button')[1]);
-	sendNowButton.click();
-	totalConnectionSent++;
-	connectSessionLock = false;
+	setTimeout(() => {
+		sendNowButton.click();
+		totalConnectionSent++;
+		connectSessionLock = false;
+	}, 100);
+	
 }
 
 function loadMoreConnection(totalConnection) {
