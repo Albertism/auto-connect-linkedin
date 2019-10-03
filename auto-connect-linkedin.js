@@ -70,7 +70,7 @@ function sendConnection (totalConnection) {
 }
 
 function clickConfirmation() {
-	const sendNowButton = $($('.send-invite__actions').children('.artdeco-button')[1]);
+	const sendNowButton = $('.artdeco-button--primary');
 	sendNowButton.click();
 	totalConnectionSent++;
 	connectSessionLock = false;
