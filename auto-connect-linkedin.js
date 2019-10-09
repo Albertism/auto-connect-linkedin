@@ -87,9 +87,16 @@ function addCSVentryForProspect(profileCardDiv) {
 	let prospectName;
 	if (prospectNameField && prospectNameField.length > 0) {
 		prospectName = prospectNameField[0].innerText;
+		prospectName = prospectName.replace(',', '.');
 	}
+	let fullProfileUrl;
+	let profileUrl = $(profileCardDiv).find('a');
+	if (profileUrl && profileUrl.length > 0) {
+		fullProfileUrl = profileUrl[0].href;
+	}
+
 	let commaSeparatedEntry = ''
-	commaSeparatedEntry = prospectName + ',' + collegeLocationCity + ',' + collegeLocationState + ',' + todayDate + '\r\n';
+	commaSeparatedEntry = prospectName + ',' + collegeLocationCity + ',' + collegeLocationState + ',' + todayDate + ',' + fullProfileUrl + '\r\n';
 	prospectCSVString += commaSeparatedEntry;
 }
 
