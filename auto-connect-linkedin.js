@@ -4,8 +4,8 @@ let completeSession = false;
 let profileList = $('.org-people-profiles-module__profile-item');
 let filteredList = [];
 let collegeNameOnThePage = $('.org-top-card-summary__title')[0].title;
-let collegeLocationCity = getCollegeLocationsArray[0];
-let collegeLocationState = getCollegeLocationsArray[1];
+let collegeLocationCity = getCollegeLocationsArray()[0].replace(' ', '');
+let collegeLocationState = getCollegeLocationsArray()[1].replace(' ', '');
 let prospectCSVString = '';
 let todayDate = getToday();
 
@@ -69,17 +69,16 @@ function sendConnection (totalConnection) {
 				  let connectButton = $(value).find('.artdeco-button');
 				  connectButton.click();
 				  this.connectSessionLock = true;
-				  // clickConfirmation(); TODO BRING IT BACK and remove next two lines
-				  totalConnectionSent++; 
-				  connectSessionLock = false;
+				  clickConfirmation();
 			    }
 			}
 		});
 	}
 	
 	console.log('Session Finished, resetting session...');
-	alert('Successfully sent invites to ' + totalConnection + ' total prospects!');
-	console.log('Final csv string:: ',prospectCSVString);
+	copyToClipboard(prospectCSVString);
+	alert('Successfully sent invites to ' + totalConnection + ' total prospects!\nProspects are copied to the clipboard.');
+	console.log('Final csv string=',prospectCSVString);
 	resetSession();
 }
 
@@ -90,8 +89,7 @@ function addCSVentryForProspect(profileCardDiv) {
 		prospectName = prospectNameField[0].innerText;
 	}
 	let commaSeparatedEntry = ''
-	commaSeparatedEntry = prospectName + ', ' + collegeLocationCity + ', ' + collegeLocationState + ', ' + todayDate + '\r\n';
-	console.log('@@@ comma separated entry for this guy: ', commaSeparatedEntry);
+	commaSeparatedEntry = prospectName + ',' + collegeLocationCity + ',' + collegeLocationState + ',' + todayDate + '\r\n';
 	prospectCSVString += commaSeparatedEntry;
 }
 
@@ -134,3 +132,12 @@ function resetSession() {
 	completeSession = false;
 	console.log('Session is reset... Safe to relaunch a new session');
 }
+
+const copyToClipboard = str => {
+  const el = document.createElement('textarea');
+  el.value = str;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+};
