@@ -1,18 +1,27 @@
 let connectSessionLock = false;
 let totalConnectionSent = 0;
-let cancelSession = false;
+let completeSession = false;
 let profileList = $('.org-people-profiles-module__profile-item');
 let filteredList = [];
+let collegeNameOnThePage = $('.org-top-card-summary__title')[0].title;
+let collegeLocationCity = getCollegeLocationsArray[0];
+let collegeLocationState = getCollegeLocationsArray[1];
+let prospectCSVString = '';
+let todayDate = getToday();
 
-	$('body').on('keydown', function(event) {
-		if (event.keyCode === 67) { //keyboard C
-			alert('Sending stopped');
-			cancelSession = true;
-			connectSessionLock = false;
-		    totalConnectionSent = 0;
-		    setTimeout(resetSession(), 3000);
-		}
-	});
+function getCollegeLocationsArray() {
+	let collegeLocation = $('.org-top-card-summary__headquarter')[0].innerText.replace(' ', '');
+	return collegeLocation.split(',');
+}
+
+function getToday() {
+    let newDate = new Date();
+    let dd = String(newDate.getDate()).padStart(2, '0');
+    let mm = String(newDate.getMonth() + 1).padStart(2, '0'); //January is 0 	
+    let yyyy = newDate.getFullYear();
+
+    return mm + '/' + dd + '/' + yyyy;
+}
 
 function sendConnection (totalConnection) {
 	if (!totalConnection) {
@@ -42,23 +51,27 @@ function sendConnection (totalConnection) {
 
 	console.log('Successfully filtered ' + filteredList.length + ' potential prospects. Sending invites...');
 
-	while(totalConnectionSent <= totalConnection && !cancelSession) {
+	while(totalConnectionSent < totalConnection) {
 		$.each(filteredList, function(index, value) {
 			while(connectSessionLock) {
 				setTimeout(function() {
 					console.log('Connect dialog already in progress, trying 1 second later..')
 				}, 1000);
 			}
+
 			let connectionInfo = $(value).find('.artdeco-button__text');
 			if (connectionInfo.length < 1) {
 				console.error('Cannot locate the connect button? ' + connectionInfo);
 			} else {
 				connectionInfo = connectionInfo[0].innerHTML;
 				if (connectionInfo.indexOf('Connect') > -1) {
+				  addCSVentryForProspect(value);
 				  let connectButton = $(value).find('.artdeco-button');
 				  connectButton.click();
 				  this.connectSessionLock = true;
-				  clickConfirmation();
+				  // clickConfirmation(); TODO BRING IT BACK and remove next two lines
+				  totalConnectionSent++; 
+				  connectSessionLock = false;
 			    }
 			}
 		});
@@ -66,7 +79,20 @@ function sendConnection (totalConnection) {
 	
 	console.log('Session Finished, resetting session...');
 	alert('Successfully sent invites to ' + totalConnection + ' total prospects!');
+	console.log('Final csv string:: ',prospectCSVString);
 	resetSession();
+}
+
+function addCSVentryForProspect(profileCardDiv) {
+	let prospectNameField = $(profileCardDiv).find('.org-people-profile-card__profile-title');
+	let prospectName;
+	if (prospectNameField && prospectNameField.length > 0) {
+		prospectName = prospectNameField[0].innerText;
+	}
+	let commaSeparatedEntry = ''
+	commaSeparatedEntry = prospectName + ', ' + collegeLocationCity + ', ' + collegeLocationState + ', ' + todayDate + '\r\n';
+	console.log('@@@ comma separated entry for this guy: ', commaSeparatedEntry);
+	prospectCSVString += commaSeparatedEntry;
 }
 
 function clickConfirmation() {
@@ -105,6 +131,6 @@ function resetSession() {
 	totalConnectionSent = 0;
 	profileList = [];
 	filteredList = [];
-	cancelSession = false;
+	completeSession = false;
 	console.log('Session is reset... Safe to relaunch a new session');
 }
