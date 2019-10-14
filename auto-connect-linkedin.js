@@ -96,7 +96,7 @@ function addCSVentryForProspect(profileCardDiv) {
 	}
 
 	let commaSeparatedEntry = ''
-	commaSeparatedEntry = prospectName + ',' + collegeLocationCity + ',' + collegeLocationState + ',' + todayDate + ',' + fullProfileUrl + '\r\n';
+	commaSeparatedEntry = prospectName + ',' + collegeNameOnThePage + ',' + collegeLocationCity + ',' + collegeLocationState + ',' + todayDate + ',' + fullProfileUrl + '\r\n';
 	prospectCSVString += commaSeparatedEntry;
 }
 
