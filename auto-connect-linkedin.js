@@ -30,7 +30,7 @@ function sendConnection (totalConnection) {
 		
 	}
 	if (totalConnection > 60) {
-		console.error('Error: To ensure to not raise the flag, please keep the invitation sent per session lower than 60');
+		console.error('Error: To avoid being flagged as a spammer, please keep the invitation sent per session lower than 60');
 		return;
 	}
 	console.log('Initializing Session...');
