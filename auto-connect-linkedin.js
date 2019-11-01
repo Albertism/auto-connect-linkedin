@@ -29,10 +29,6 @@ function sendConnection (totalConnection) {
 		return;
 		
 	}
-	if (totalConnection > 60) {
-		console.error('Error: To avoid being flagged as a spammer, please keep the invitation sent per session lower than 60');
-		return;
-	}
 	console.log('Initializing Session...');
 	// Make sure to scroll to get full list
 	if (filteredList.length <= totalConnection) {
@@ -78,7 +74,7 @@ function sendConnection (totalConnection) {
 	console.log('Session Finished, resetting session...');
 	copyToClipboard(prospectCSVString);
 	alert('Successfully sent invites to ' + totalConnection + ' total prospects!\nProspects are copied to the clipboard.');
-	console.log('Final csv string=',prospectCSVString);
+	console.log(prospectCSVString);
 	resetSession();
 }
 
