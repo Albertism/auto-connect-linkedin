@@ -10,8 +10,8 @@ let prospectCSVString = '';
 let todayDate = getToday();
 
 function getCollegeLocationsArray() {
-	let collegeLocation = $('.org-top-card-summary__headquarter')[0].innerText.replace(' ', '');
-	return collegeLocation.split(',');
+	let collegeLocation = $('.org-top-card-summary__headquarter') ? $('.org-top-card-summary__headquarter')[0].innerText.replace(' ', '') : null;
+	return collegeLocation && collegeLocation.indexOf(',') > -1 ? collegeLocation.split(',') : ['Unknown', collegeLocation];
 }
 
 function getToday() {
