@@ -31,7 +31,7 @@ function sendConnection (totalConnection) {
 	}
 	console.log('Initializing Session...');
 	// Make sure to scroll to get full list
-	if (filteredList.length <= totalConnection) {
+	if (filteredList.length < totalConnection) {
 		console.log('Not enough prospect in this page, loading more connection...');
 		// scroll to load
 		loadMoreConnection(totalConnection);
