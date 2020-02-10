@@ -3,14 +3,14 @@ let totalConnectionSent = 0;
 let completeSession = false;
 let profileList = $('.org-people-profiles-module__profile-item');
 let filteredList = [];
-let collegeNameOnThePage = $('.org-top-card-summary__title')[0].title;
+let collegeNameOnThePage = $('.org-top-card-summary__title').title;
 let collegeLocationCity = getCollegeLocationsArray()[0].replace(' ', '');
 let collegeLocationState = getCollegeLocationsArray()[1].replace(' ', '');
 let prospectCSVString = '';
 let todayDate = getToday();
 
 function getCollegeLocationsArray() {
-	let collegeLocation = $('.org-top-card-summary__headquarter') ? $('.org-top-card-summary__headquarter')[0].innerText.replace(' ', '') : null;
+	let collegeLocation = $('.org-top-card-summary-info-list__info-item') ? $('.org-top-card-summary-info-list__info-item')[0].innerText.replace(' ', '') : null;
 	return collegeLocation && collegeLocation.indexOf(',') > -1 ? collegeLocation.split(',') : ['Unknown', collegeLocation];
 }
 
